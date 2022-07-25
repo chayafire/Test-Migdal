@@ -1,0 +1,91 @@
+<div class="container border-componnent">
+    <h5>אנשי קשר</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>מועדף:</th>
+                <th>שם איש קשר</th>
+                <th>סוג</th>
+                <th>כתובת</th>
+                <th>טלפון נייד</th>
+                <th>דוא"ל</th>
+            </tr>
+        </thead>
+        <tr *ngFor="let item of process.contactPersons">
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" id="deliveryFlag" (change)="sendFormInformation()" name="deliveryFlag"
+                        [(ngModel)]="item.deliveryFlag">
+                </div>
+            </td>
+            <td>{{item.name}}</td>
+            <td>{{item.type.value}}</td>
+            <td>{{item.address}}</td>
+            <td>{{item.phoneNumber|phone}}</td>
+            <td>{{item.email}}</td>
+        </tr>
+    </table>
+    <form #form="ngForm">
+        <table class="table">
+            <tr *ngIf="showAddnew">
+                <td>
+                    <div class="form-check">
+                        <input type="checkbox" id="deliveryFlag" [(ngModel)]="newContact.deliveryFlag"
+                            name="deliveryFlag">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="string" #name="ngModel" required pattern="^[\-\u0590-\u05FF\ ]+$"
+                            class="form-control" id="name" [(ngModel)]="newContact.name" name="name">
+                    </div>
+                    <div [hidden]="name.valid || name.pristine" class="alert">
+                        *שדה חובה, אנא הזן שם באותיות עברית בלבד
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" required #type="ngModel" [(ngModel)]="newContact.type" id="type" name="type">
+                            <option *ngFor="let item of dropDownListData['contactPersonType/submitedBy']"
+                                [ngValue]=item.code>
+                                {{item.value}}</option>
+                        </select>
+                    </div>
+                    <div [hidden]="type.valid || type.pristine" class="alert">
+                        *שדה חובה, אנא בחר סוג
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="string" class="form-control" id="address" [(ngModel)]="newContact.address"
+                            name="address">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="tel" #phoneNumber="ngModel" class="form-control" required pattern="[0-9]+"
+                            minlength="10" maxlength="10" id="phoneNumber" [(ngModel)]="newContact.phoneNumber"
+                            name="phoneNumber">
+                    </div>
+                    <div [hidden]="phoneNumber.valid || phoneNumber.pristine" class="alert">
+                        * שדה חובה, אנא הקלד מספר טלפון תקין
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="email" #email="ngModel" class="form-control"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" id="email" [(ngModel)]="newContact.email"
+                            name="email">
+                    </div>
+                    <div [hidden]="email.valid || email.pristine" class="alert">
+                        כתובת מייל לא תקינה
+                    </div>
+                </td>
+                <td>
+                    <button [disabled]="!form.form.valid" (click)="addNewContact()">+</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <button class="btn btn-link" (click)="showAddnew=true">הוסף איש קשר</button>
+</div>
